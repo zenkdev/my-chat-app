@@ -8,7 +8,7 @@ const users = [
 export function loginAsync(payload: { username: string; password: string }) {
   return new Promise<{ username: string }>((resolve, reject) =>
     setTimeout(() => {
-      const user = users.find((u) => u.username === payload.username && u.password === payload.password);
+      const user = users.find(u => u.username === payload.username && u.password === payload.password);
       if (user) {
         resolve({ username: user.username });
       } else {

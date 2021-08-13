@@ -26,7 +26,7 @@ function App() {
     <div>
       <Layout>
         <Layout.Header>{isLoggedIn && <UserInfo />}</Layout.Header>
-        <Layout.Content className='App-content'>{isLoggedIn ? <Chat /> : <Login />}</Layout.Content>
+        <Layout.Content className="App-content">{isLoggedIn ? <Chat /> : <Login />}</Layout.Content>
         <Layout.Footer>Footer</Layout.Footer>
       </Layout>
     </div>

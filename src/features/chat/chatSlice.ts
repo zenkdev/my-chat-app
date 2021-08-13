@@ -58,36 +58,36 @@ export const chatSlice = createSlice({
   name: 'chat',
   initialState,
   reducers: {
-    joinRoom: (state) => {
+    joinRoom: state => {
       state.cameraBtnDisabled = true;
       state.joinBtnDisabled = true;
       state.isModalVisible = true;
     },
-    closeModal: (state) => {
+    closeModal: state => {
       state.isModalVisible = false;
     },
-    micMute: (state) => {
+    micMute: state => {
       state.micmuted = true;
     },
-    micUnmute: (state) => {
+    micUnmute: state => {
       state.micmuted = false;
     },
-    cameraOff: (state) => {
+    cameraOff: state => {
       state.cameraoff = true;
     },
-    cameraOn: (state) => {
+    cameraOn: state => {
       state.cameraoff = false;
     },
-    soundOff: (state) => {
+    soundOff: state => {
       state.soundoff = true;
     },
-    soundOn: (state) => {
+    soundOn: state => {
       state.soundoff = false;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(createRoomAsync.pending, (state) => {
+      .addCase(createRoomAsync.pending, state => {
         state.isModalVisible = false;
         state.createBtnDisabled = true;
         state.joinBtnDisabled = true;
@@ -96,20 +96,20 @@ export const chatSlice = createSlice({
         state.roomId = action.payload;
         state.currentRoom = `Current room is ${state.roomId} - You are the caller!`;
       })
-      .addCase(joinRoomByIdAsync.pending, (state) => {
+      .addCase(joinRoomByIdAsync.pending, state => {
         state.isModalVisible = false;
       })
       .addCase(joinRoomByIdAsync.fulfilled, (state, action) => {
         state.roomId = action.payload;
         state.currentRoom = `Current room is ${state.roomId} - You are the callee!`;
       })
-      .addCase(openUserMediaAsync.fulfilled, (state) => {
+      .addCase(openUserMediaAsync.fulfilled, state => {
         state.cameraBtnDisabled = true;
         state.joinBtnDisabled = false;
         state.createBtnDisabled = false;
         state.hangupBtnDisabled = false;
       })
-      .addCase(hangUpAsync.fulfilled, (state) => {
+      .addCase(hangUpAsync.fulfilled, state => {
         state.currentRoom = '';
         state.cameraBtnDisabled = false;
         state.joinBtnDisabled = true;

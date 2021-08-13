@@ -44,7 +44,7 @@ export function Chat() {
     micmuted,
     cameraoff,
     soundoff,
-  } = useAppSelector((state) => state.chat);
+  } = useAppSelector(state => state.chat);
 
   const createBtnClick = () => {
     dispatch(createRoomAsync());
@@ -92,60 +92,50 @@ export function Chat() {
 
   return (
     <div>
-      <div id='buttons'>
+      <div id="buttons">
         <Space>
-          <Button id='cameraBtn' icon={<VideoCameraOutlined />} onClick={cameraBtnClick} disabled={cameraBtnDisabled}>
+          <Button id="cameraBtn" icon={<VideoCameraOutlined />} onClick={cameraBtnClick} disabled={cameraBtnDisabled}>
             Open camera & microphone
           </Button>
-          <Button id='createBtn' icon={<UsergroupAddOutlined />} onClick={createBtnClick} disabled={joinBtnDisabled}>
+          <Button id="createBtn" icon={<UsergroupAddOutlined />} onClick={createBtnClick} disabled={joinBtnDisabled}>
             Create room
           </Button>
-          <Button id='joinBtn' icon={<TeamOutlined />} onClick={joinBtnClick} disabled={createBtnDisabled}>
+          <Button id="joinBtn" icon={<TeamOutlined />} onClick={joinBtnClick} disabled={createBtnDisabled}>
             Join room
           </Button>
-          <Button id='hangupBtn' icon={<CloseOutlined />} onClick={hangupBtnClick} disabled={hangupBtnDisabled}>
+          <Button id="hangupBtn" icon={<CloseOutlined />} onClick={hangupBtnClick} disabled={hangupBtnDisabled}>
             Hangup
           </Button>
         </Space>
       </div>
       <div>
-        <span id='currentRoom'>{currentRoom}</span>
+        <span id="currentRoom">{currentRoom}</span>
       </div>
-      <div id='videos'>
-        <video id='localVideo' ref={localVideoRef} muted autoPlay playsInline></video>
+      <div id="videos">
+        <video id="localVideo" ref={localVideoRef} muted autoPlay playsInline></video>
         <div>
           <Space>
             <Tooltip title={micmuted ? 'Unmute mic' : 'Mute mic'}>
-              <Button
-                id='micmute'
-                shape='circle'
-                icon={micmuted ? <AudioOutlined /> : <AudioMutedOutlined />}
-                onClick={micmuteClick}
-              />
+              <Button id="micmute" shape="circle" icon={micmuted ? <AudioOutlined /> : <AudioMutedOutlined />} onClick={micmuteClick} />
             </Tooltip>
             <Tooltip title={cameraoff ? 'Camera On' : 'Camera Off'}>
               <Button
-                id='cameraoff'
-                shape='circle'
+                id="cameraoff"
+                shape="circle"
                 icon={cameraoff ? <EyeOutlined /> : <EyeInvisibleOutlined />}
                 onClick={cameraoffClick}
               />
             </Tooltip>
             <Tooltip title={soundoff ? 'Sound On' : 'Sound Off'}>
-              <Button
-                id='soundoff'
-                shape='circle'
-                icon={soundoff ? <SoundOutlined /> : <StopOutlined />}
-                onClick={soundoffClick}
-              />
+              <Button id="soundoff" shape="circle" icon={soundoff ? <SoundOutlined /> : <StopOutlined />} onClick={soundoffClick} />
             </Tooltip>
           </Space>
         </div>
-        <video id='remoteVideo' ref={remoteVideoRef} autoPlay playsInline></video>
+        <video id="remoteVideo" ref={remoteVideoRef} autoPlay playsInline></video>
       </div>
-      <Modal visible={isModalVisible} okText='Join' title='Join room' onOk={handleOk} onCancel={handleCancel}>
+      <Modal visible={isModalVisible} okText="Join" title="Join room" onOk={handleOk} onCancel={handleCancel}>
         Enter ID for room to join:
-        <Input placeholder='Room ID' ref={roomIdRef} />
+        <Input placeholder="Room ID" ref={roomIdRef} />
       </Modal>
     </div>
   );

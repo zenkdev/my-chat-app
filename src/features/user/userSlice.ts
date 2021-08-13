@@ -15,31 +15,28 @@ const initialState: UserState = {
   loginStatus: 'idle',
 };
 
-export const login = createAsyncThunk(
-  'user/login',
-  async (payload: { username: string; password: string }, { rejectWithValue }) => {
-    try {
-      const response = await loginAsync(payload);
-      // The value we return becomes the `fulfilled` action payload
-      return response;
-    } catch (e) {
-      return rejectWithValue(e.message);
-    }
-  },
-);
+export const login = createAsyncThunk('user/login', async (payload: { username: string; password: string }, { rejectWithValue }) => {
+  try {
+    const response = await loginAsync(payload);
+    // The value we return becomes the `fulfilled` action payload
+    return response;
+  } catch (e) {
+    return rejectWithValue(e.message);
+  }
+});
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    logout: (state) => {
+    logout: state => {
       state.isLoggedIn = false;
       state.username = undefined;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(login.pending, (state) => {
+      .addCase(login.pending, state => {
         state.isLoggedIn = false;
         state.username = undefined;
         state.loginStatus = 'pending';
