@@ -1,3 +1,5 @@
+@import '~antd/dist/antd.css';
+
 .App {
   text-align: center;
 }
@@ -22,6 +24,10 @@
   font-size: calc(10px + 2vmin);
 }
 
+.App-content {
+  padding: 2rem;
+}
+
 .App-link {
   color: rgb(112, 76, 182);
 }
@@ -36,4 +42,18 @@
   100% {
     transform: translateY(0px);
   }
+}
+
+div#videos {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+div#videos > video {
+  background: black;
+  width: 640px;
+  height: 100%;
+  display: block;
+  margin: 1em;
 }
