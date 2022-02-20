@@ -7,11 +7,10 @@ import { Login } from './features/user/Login';
 import { Chat } from './features/chat/Chat';
 import { Layout } from 'antd';
 
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
+import {initializeApp} from 'firebase/app';
+import {getFirestore} from 'firebase/firestore';
 
-firebase.initializeApp({
+const app = initializeApp({
   apiKey: 'AIzaSyDce3bHLUZgiC1x1pbncat4_nerKKCOCDA',
   authDomain: 'fir-rtc-8e7eb.firebaseapp.com',
   projectId: 'fir-rtc-8e7eb',
@@ -19,6 +18,8 @@ firebase.initializeApp({
   messagingSenderId: '523471811445',
   appId: '1:523471811445:web:768d2a6e045ac859fd593c',
 });
+
+export const db = getFirestore(app);
 
 function App() {
   const isLoggedIn = useAppSelector(selectIsLoggedIn);
