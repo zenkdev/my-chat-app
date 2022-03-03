@@ -20,7 +20,7 @@ export const login = createAsyncThunk('user/login', async (payload: { username: 
     const response = await loginAsync(payload);
     // The value we return becomes the `fulfilled` action payload
     return response;
-  } catch (e) {
+  } catch (e: any) {
     return rejectWithValue(e.message);
   }
 });
