@@ -1,4 +1,4 @@
-import { Button, Input, Modal, Space, Tooltip } from 'antd';
+import { Button, Input, InputRef, Modal, Space, Tooltip } from 'antd';
 import Icon, {
   VideoCameraOutlined,
   TeamOutlined,
@@ -35,7 +35,7 @@ const VolumeOnIcon = (props: any) => <Icon component={VolumeOnSvg as any} {...pr
 export function Chat() {
   const localVideoRef = createRef<HTMLVideoElement>();
   const remoteVideoRef = createRef<HTMLVideoElement>();
-  const roomIdRef = createRef<Input>();
+  const roomIdRef = createRef<InputRef>();
 
   const dispatch = useAppDispatch();
   const {
@@ -67,7 +67,7 @@ export function Chat() {
   };
 
   const handleOk = useCallback(async () => {
-    const roomId = roomIdRef.current?.input.value;
+    const roomId = roomIdRef.current?.input?.value;
     if (!roomId) {
       return;
     }
