@@ -1,5 +1,6 @@
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import { collection, doc, addDoc, setDoc, onSnapshot, getDoc, getDocs, deleteDoc } from 'firebase/firestore';
+
+import { db } from '../../App';
 
 const configuration = {
   iceServers: [
@@ -15,8 +16,7 @@ let localStream: MediaStream | null = null;
 let remoteStream: MediaStream | null = null;
 
 export async function createRoom() {
-  const db = firebase.firestore();
-  const roomRef = await db.collection('rooms').doc();
+  const roomRef = doc(collection(db, 'rooms'));
 
   console.log('Create PeerConnection with configuration: ', configuration);
   peerConnection = new RTCPeerConnection(configuration);
@@ -28,7 +28,7 @@ export async function createRoom() {
   });
 
   // Code for collecting ICE candidates below
-  const callerCandidatesCollection = roomRef.collection('callerCandidates');
+  const callerCandidatesCollection = collection(roomRef, 'callerCandidates');
 
   peerConnection.addEventListener('icecandidate', event => {
     if (!event.candidate) {
@@ -36,7 +36,7 @@ export async function createRoom() {
       return;
     }
     console.log('Got candidate: ', event.candidate);
-    callerCandidatesCollection.add(event.candidate.toJSON());
+    addDoc(callerCandidatesCollection, event.candidate.toJSON());
   });
   // Code for collecting ICE candidates above
 
@@ -51,7 +51,7 @@ export async function createRoom() {
       sdp: offer.sdp,
     },
   };
-  await roomRef.set(roomWithOffer);
+  await setDoc(roomRef, roomWithOffer);
   console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
   // Code for creating a room above
 
@@ -64,7 +64,7 @@ export async function createRoom() {
   });
 
   // Listening for remote session description below
-  roomRef.onSnapshot(async snapshot => {
+  onSnapshot(roomRef, async snapshot => {
     const data = snapshot.data();
     if (!peerConnection?.currentRemoteDescription && data && data.answer) {
       console.log('Got remote description: ', data.answer);
@@ -75,7 +75,7 @@ export async function createRoom() {
   // Listening for remote session description above
 
   // Listen for remote ICE candidates below
-  roomRef.collection('calleeCandidates').onSnapshot(snapshot => {
+  onSnapshot(collection(roomRef, 'calleeCandidates'), snapshot => {
     snapshot.docChanges().forEach(async change => {
       if (change.type === 'added') {
         let data = change.doc.data();
@@ -89,12 +89,11 @@ export async function createRoom() {
 }
 
 export async function joinRoomById(roomId: string) {
-  const db = firebase.firestore();
-  const roomRef = db.collection('rooms').doc(`${roomId}`);
-  const roomSnapshot = await roomRef.get();
+  const roomRef = doc(collection(db, 'rooms'), `${roomId}`);
+  const roomSnapshot = await getDoc(roomRef);
   console.log('Got room:', roomSnapshot.exists);
 
-  if (roomSnapshot.exists) {
+  if (roomSnapshot.exists()) {
     console.log('Create PeerConnection with configuration: ', configuration);
     peerConnection = new RTCPeerConnection(configuration);
     registerPeerConnectionListeners();
@@ -103,14 +102,14 @@ export async function joinRoomById(roomId: string) {
     });
 
     // Code for collecting ICE candidates below
-    const calleeCandidatesCollection = roomRef.collection('calleeCandidates');
+    const calleeCandidatesCollection = collection(roomRef, 'calleeCandidates');
     peerConnection.addEventListener('icecandidate', event => {
       if (!event.candidate) {
         console.log('Got final candidate!');
         return;
       }
       console.log('Got candidate: ', event.candidate);
-      calleeCandidatesCollection.add(event.candidate.toJSON());
+      addDoc(calleeCandidatesCollection, event.candidate.toJSON());
     });
     // Code for collecting ICE candidates above
 
@@ -136,11 +135,11 @@ export async function joinRoomById(roomId: string) {
         sdp: answer.sdp,
       },
     };
-    await roomRef.update(roomWithAnswer);
+    await setDoc(roomRef, roomWithAnswer);
     // Code for creating SDP answer above
 
     // Listening for remote ICE candidates below
-    roomRef.collection('callerCandidates').onSnapshot(snapshot => {
+    onSnapshot(collection(roomRef, 'callerCandidates'), snapshot => {
       snapshot.docChanges().forEach(async change => {
         if (change.type === 'added') {
           let data = change.doc.data();
@@ -190,17 +189,16 @@ export async function hangUp({
 
   // Delete room on hangup
   if (roomId) {
-    const db = firebase.firestore();
-    const roomRef = db.collection('rooms').doc(roomId);
-    const calleeCandidates = await roomRef.collection('calleeCandidates').get();
+    const roomRef = doc(collection(db, 'rooms'), roomId);
+    const calleeCandidates = await getDocs(collection(roomRef, 'calleeCandidates'));
     calleeCandidates.forEach(async candidate => {
-      await candidate.ref.delete();
+      await deleteDoc(candidate.ref);
     });
-    const callerCandidates = await roomRef.collection('callerCandidates').get();
+    const callerCandidates = await getDocs(collection(roomRef, 'callerCandidates'));
     callerCandidates.forEach(async candidate => {
-      await candidate.ref.delete();
+      await deleteDoc(candidate.ref);
     });
-    await roomRef.delete();
+    await deleteDoc(roomRef);
   }
 }
 
