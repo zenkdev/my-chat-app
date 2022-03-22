@@ -1,5 +1,5 @@
 import { Button, Input, Modal, Space, Tooltip } from 'antd';
-import {
+import Icon, {
   VideoCameraOutlined,
   TeamOutlined,
   UsergroupAddOutlined,
@@ -8,8 +8,6 @@ import {
   AudioOutlined,
   EyeInvisibleOutlined,
   EyeOutlined,
-  SoundOutlined,
-  StopOutlined,
 } from '@ant-design/icons';
 import React, { createRef, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -27,6 +25,12 @@ import {
   soundOff,
   soundOn,
 } from './chatSlice';
+
+import { ReactComponent as VolumeOffSvg } from './volume_off_black_24dp.svg';
+import { ReactComponent as VolumeOnSvg } from './volume_up_black_24dp.svg';
+
+const VolumeOffIcon = (props: any) => <Icon component={VolumeOffSvg as any} {...props} />;
+const VolumeOnIcon = (props: any) => <Icon component={VolumeOnSvg as any} {...props} />;
 
 export function Chat() {
   const localVideoRef = createRef<HTMLVideoElement>();
@@ -127,7 +131,7 @@ export function Chat() {
               />
             </Tooltip>
             <Tooltip title={soundoff ? 'Sound On' : 'Sound Off'}>
-              <Button id="soundoff" shape="circle" icon={soundoff ? <SoundOutlined /> : <StopOutlined />} onClick={soundoffClick} />
+              <Button id="soundoff" shape="circle" icon={soundoff ? <VolumeOnIcon /> : <VolumeOffIcon />} onClick={soundoffClick} />
             </Tooltip>
           </Space>
         </div>
