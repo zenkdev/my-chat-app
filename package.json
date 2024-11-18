@@ -14,7 +14,7 @@
     "@types/react-redux": "7.1.34",
     "antd": "4.24.16",
     "firebase": "9.23.0",
-    "husky": "8.0.3",
+    "husky": "9.1.7",
     "lint-staged": "13.2.3",
     "prettier": "2.8.8",
     "react": "18.3.1",
